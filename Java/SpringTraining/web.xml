@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-app_2_4.xsd"
+    version="2.4">
+    
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/training-service.xml,/WEB-INF/training-data.xml,/WEB-INF/training-security.xml</param-value>
+  </context-param>
+   
+   <!-- NOTE: ContextLoaderListener may not work for all application
+              servers. If it does not work for yours, you must use
+              ContextLoaderServlet instead. See page XXX, chapter 8
+              for more information.
+     -->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <servlet>
+    <servlet-name>training</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>training</servlet-name>
+    <url-pattern>*.htm</url-pattern>
+  </servlet-mapping>
+
+<!-- - - - - - - - ACEGI FILTERS - - - - - - - - -->
+  <filter> 
+    <filter-name>Acegi Integration Filter</filter-name> 
+    <filter-class>net.sf.acegisecurity.util.FilterToBeanProxy</filter-class> 
+    <init-param> 
+      <param-name>targetClass</param-name> 
+      <param-value>net.sf.acegisecurity.context.HttpSessionContextIntegrationFilter</param-value> 
+    </init-param> 
+  </filter> 
+
+  <filter>
+    <filter-name>Acegi Authentication Processing Filter</filter-name>
+    <filter-class>net.sf.acegisecurity.util.FilterToBeanProxy</filter-class>
+    <init-param>
+      <param-name>targetClass</param-name>
+      <param-value>net.sf.acegisecurity.ui.webapp.AuthenticationProcessingFilter</param-value> 
+    </init-param>
+  </filter>
+
+  <filter>
+    <filter-name>Acegi HTTP Request Security Filter</filter-name>
+    <filter-class>net.sf.acegisecurity.util.FilterToBeanProxy</filter-class>
+    <init-param>
+      <param-name>targetBean</param-name>
+      <param-value>securityEnforcementFilter</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping> 
+    <filter-name>Acegi Integration Filter</filter-name> 
+    <url-pattern>/*</url-pattern> 
+  </filter-mapping> 
+  
+  <filter-mapping>
+    <filter-name>Acegi Authentication Processing Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <filter-mapping>
+    <filter-name>Acegi HTTP Request Security Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+<!-- - - - - - - - END ACEGI FILTERS - - - - - - - - -->
+
+</web-app>

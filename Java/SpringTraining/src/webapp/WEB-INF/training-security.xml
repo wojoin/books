@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+  <!-- = = = = = = = = = = = = = = = = = = = =
+     = SECURING AT THE HTTP REQUEST LEVEL    =
+     = = = = = = = = = = = = = = = = = = = = -->
+<beans>
+  <!-- = = = = = = = SECURITY FILTERS = = = = = = = -->
+  <bean id="securityEnforcementFilter"
+      class="net.sf.acegisecurity.intercept.web.SecurityEnforcementFilter">
+    <property name="filterSecurityInterceptor">
+      <ref bean="filterInvocationInterceptor"/>
+    </property>
+    <property name="authenticationEntryPoint">
+      <ref bean="authenticationEntryPoint"/>
+    </property>
+  </bean>
+
+  <bean id="authenticationProcessingFilter" 
+        class="net.sf.acegisecurity.ui.webapp.AuthenticationProcessingFilter">
+    <property name="filterProcessesUrl">
+      <value>/j_acegi_security_check</value>
+    </property>
+    <property name="authenticationFailureUrl">
+      <value>/jsp/login.jsp?failed=true</value>
+    </property>
+    <property name="defaultTargetUrl">
+      <value>/</value>
+    </property>
+    <property name="authenticationManager">
+      <ref bean="authenticationManager"/>
+    </property>
+  </bean>
+
+
+  <bean id="integrationFilter"
+      class="net.sf.acegisecurity.context.HttpSessionContextIntegrationFilter">
+    <property name="context">
+      <value>net.sf.acegisecurity.context.security.SecureContextImpl</value>
+    </property>
+  </bean>
+
+  <bean id="authenticationEntryPoint" 
+      class="net.sf.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
+    <property name="loginFormUrl">
+      <value>/jsp/login.jsp</value>
+    </property>
+  </bean>
+  
+  <!-- = = = = = = = = SECURITY INTERCEPTOR = = = = = = = = -->  
+  <bean id="filterInvocationInterceptor"
+      class="net.sf.acegisecurity.intercept.web.FilterSecurityInterceptor">
+    <property name="authenticationManager">
+      <ref bean="authenticationManager"/>
+    </property>
+    <property name="accessDecisionManager">
+      <ref bean="accessDecisionManager"/> 
+    </property>
+    
+    <property name="objectDefinitionSource">
+      <value>
+        CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+        \A/student/.*\Z=ROLE_STUDENT,ROLE_INSTRUCTOR
+        \A/faculty/.*\Z=ROLE_INSTRUCTOR
+      </value>
+    </property>
+  </bean>
+  
+  <!-- = = = = = = = = AUTHENTICATION = = = = = = = -->
+  <bean id="authenticationManager" 
+      class="net.sf.acegisecurity.providers.ProviderManager">
+    <property name="providers">
+      <list>
+        <ref bean="daoAuthenticationProvider"/>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="daoAuthenticationProvider" 
+      class="net.sf.acegisecurity.providers.dao.DaoAuthenticationProvider">
+    <property name="authenticationDao"><ref bean="authenticationDao"/></property>
+  </bean>
+
+  <bean id="authenticationDao"
+      class="net.sf.acegisecurity.providers.dao.jdbc.JdbcDaoImpl">
+    <property name="dataSource">
+      <ref bean="dataSource"/>
+    </property>
+    <property name="usersByUsernameQuery">
+      <value>select login,password,'true' from User where login = ?</value>
+    </property>
+    <property name="authoritiesByUsernameQuery">
+      <value>SELECT username, authority FROM authorities WHERE username = ?</value>
+    </property>
+  </bean>
+
+  <!-- = = = = = = = = ACCESS CONTROL = = = = = = = -->
+	<bean id="accessDecisionManager" 
+      class="net.sf.acegisecurity.vote.AffirmativeBased">
+   	<property name="allowIfAllAbstainDecisions"><value>false</value></property>
+		<property name="decisionVoters">
+		  <list>
+		    <ref bean="roleVoter"/>
+		  </list>
+		</property>
+	</bean>
+
+	<bean id="roleVoter" class="net.sf.acegisecurity.vote.RoleVoter"/>
+</beans>

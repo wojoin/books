@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <!-- CONTROLLERS -->
+  <bean id="registerStudentController"
+      class="com.springinaction.training.mvc.RegisterStudentController">
+    <property name="formView"><value>registerStudent</value></property>
+    <property name="successView"><value>registerSuccess</value></property>
+    <property name="studentService"><ref bean="studentService"/></property>
+    <property name="commandClass"><value>com.springinaction.training.model.Student</value></property>
+  </bean>
+
+  <bean id="listCourseController"
+      class="com.springinaction.training.mvc.ListCourseController">
+    <property name="courseService"><ref bean="courseService"/></property>
+  </bean>
+
+  <bean id="editCourseController"
+      class="com.springinaction.training.mvc.EditCourseController">
+    <property name="formView"><value>editCourseForm</value></property>
+    <property name="successView"><value>redirect:/student/listCourses.htm</value></property>
+    <property name="courseService"><ref bean="courseService"/></property>
+    <property name="instructorService"><ref bean="instructorService"/></property>
+  </bean>
+
+  <bean id="createInstructorController"
+      class="com.springinaction.training.mvc.CreateInstructorController">
+    <property name="formView"><value>editInstructorForm</value></property>
+    <property name="successView"><value>redirect:/student/listInstructors.htm</value></property>
+    <property name="instructorService"><ref bean="instructorService"/></property>
+  </bean>
+  
+  <bean id="editInstructorController"
+      class="com.springinaction.training.mvc.EditInstructorController">
+    <property name="formView"><value>editInstructorForm</value></property>
+    <property name="successView"><value>redirect:/student/listInstructors.htm</value></property>
+    <property name="instructorService"><ref bean="instructorService"/></property>
+  </bean>
+
+  <bean id="listInstructorsController"
+      class="com.springinaction.training.mvc.ListInstructorsController">
+    <property name="instructorService"><ref bean="instructorService"/></property>
+  </bean>
+  
+  <bean id="deleteInstructorController"
+      class="com.springinaction.training.mvc.DeleteInstructorController">
+    <property name="instructorService"><ref bean="instructorService"/></property>
+  </bean>
+
+  <bean id="displayInstructorController"
+      class="com.springinaction.training.mvc.DisplayInstructorController">
+    <property name="instructorService"><ref bean="instructorService"/></property>
+  </bean>
+    
+  <bean id="displayCourseController"
+      class="com.springinaction.training.mvc.DisplayCourseController">
+    <property name="courseService"><ref bean="courseService"/></property>
+  </bean>
+  
+  <bean id="enrollController"
+      class="com.springinaction.training.mvc.EnrollInCourseController">
+    <property name="courseService"><ref bean="courseService"/></property>
+    <property name="studentService"><ref bean="studentService"/></property>
+  </bean> 
+  
+  <bean id="displayTranscriptController"
+      class="com.springinaction.training.mvc.DisplayTranscriptController">
+    <property name="studentService"><ref bean="studentService"/></property>
+  </bean>
+
+  <bean id="homeController"
+      class="com.springinaction.training.mvc.HomeController">
+    <property name="greeting">
+      <value>Welcome to Spring Training!</value>
+    </property>
+  </bean>
+
+  <bean id="courseListPdfController"
+	  class="com.springinaction.training.mvc.ListCourseDocumentController">
+    <property name="documentView">
+      <ref bean="pdfView"/>
+    </property>
+    <property name="courseService">
+      <ref bean="courseService"/>
+    </property>
+  </bean>
+
+  <bean id="courseListExcelController"
+	  class="com.springinaction.training.mvc.ListCourseDocumentController">
+    <property name="documentView">
+      <ref bean="pdfView"/>
+    </property>
+    <property name="courseService">
+      <ref bean="courseService"/>
+    </property>
+  </bean>
+
+  <!-- VELOCITY AND FREEMARKER CONFIGURATIONS -->
+<!--
+  <bean id="velocityConfigurer" 
+      class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+    <property name="resourceLoaderPath">
+      <value>velocity/</value>
+    </property>
+  </bean>
+
+  <bean id="freemarkerConfig" 
+    class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer"> 
+    <property name="templateLoaderPath">
+      <value>freemarker</value>
+    </property> 
+  </bean> 
+-->
+
+  <!-- URL and VIEW MAPPINGS -->
+  <bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <property name="mappings">
+      <props>
+        <prop key="/register.htm">registerStudentController</prop>
+        <prop key="/student/listCourses.htm">listCourseController</prop>
+        <prop key="/student/displayCourse.htm">displayCourseController</prop>
+        <prop key="/student/enroll.htm">enrollController</prop>
+        <prop key="/student/displayTranscript.htm">displayTranscriptController</prop>
+        <prop key="/student/courseList.pdf">courseListPdfController</prop>
+        <prop key="/student/courseList.xls">courseListExcelController</prop>
+        <prop key="/faculty/editCourse.htm">editCourseController</prop>
+        <prop key="/faculty/createInstructor.htm">createInstructorController</prop>
+        <prop key="/faculty/editInstructor.htm">editInstructorController</prop>
+        <prop key="/student/displayInstructor.htm">displayInstructorController</prop>
+        <prop key="/student/listInstructors.htm">listInstructorsController</prop>
+        <prop key="/faculty/deleteInstructor.htm">deleteInstructorController</prop>
+        <prop key="/home.htm">homeController</prop>
+      </props>
+    </property>
+    <property name="interceptors">
+      <list>
+        <bean class="org.springframework.orm.hibernate3.support.OpenSessionInViewInterceptor">
+          <property name="sessionFactory" ref="sessionFactory"/>
+          <property name="flushModeName" value="FLUSH_AUTO" />
+        </bean>
+      </list>
+    </property>
+  </bean>
+  
+
+<!--
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+      singleton="true" lazy-init="default" dependency-check="default" autowire="default">
+    <property name="viewClass">
+      <value>org.springframework.web.servlet.view.InternalResourceView</value>
+    </property>
+    <property name="prefix"><value>/WEB-INF/jsp/</value></property>
+    <property name="suffix"><value>.jsp</value></property>
+  </bean>
+-->
+
+ <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles.TilesConfigurer">
+   <property name="definitions">
+     <list>
+       <value>/WEB-INF/tiles-defs.xml</value>
+     </list>
+   </property>
+ </bean>
+    
+  <bean id="viewResolver" 
+      class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="viewClass">
+      <value>org.springframework.web.servlet.view.tiles.TilesView</value>
+    </property>
+  </bean>
+
+ 
+<!-- 
+  <bean id="velocityViewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+    <property name="suffix"><value>.vm</value></property>
+    <property name="dateToolAttribute">
+      <value>dateTool</value>
+    </property>
+    <property name="numberToolAttribute">
+      <value>numberTool</value>
+    </property>
+    <property name="exposeSpringMacroHelpers">
+      <value>true</value>
+    </property>
+  </bean>
+
+  <bean id="freeMarkerViewResolver" 
+      class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+    <property name="suffix"><value>.ftl</value></property>
+    <property name="exposeSpringMacroHelpers">
+      <value>true</value>
+    </property>
+  </bean>
+-->
+  
+  <!-- DOCUMENT (PDF AND EXCEL) VIEWS -->
+  <bean id="pdfView"
+	  class="com.springinaction.training.mvc.CourseListPdfView"/>
+
+  <bean id="excelView"
+	  class="com.springinaction.training.mvc.CourseListExcelView"/>
+    
+  <!-- TILES CONFIGURATION -->   
+<!--
+  <bean id="tilesConfigurer"
+      class="org.springframework.web.servlet.view.tiles.TilesConfigurer">
+    <property name="factoryClass">
+      <value>org.apache.struts.tiles.xmlDefinition.I18nFactorySet</value> 
+    </property>
+    <property name="definitions">
+      <list>
+        <value>/WEB-INF/tiledefs/training-defs.xml</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean id="tilesViewResolver" 
+      class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="viewClass">
+      <value>org.springframework.web.servlet.view.tiles.TilesJstlView</value>
+    </property>
+  </bean>  
+-->
+</beans>

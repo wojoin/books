@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<configs>
+		<config>src/webapp/WEB-INF/applicationContext-hibernate.xml</config>
+		<config>src/webapp/WEB-INF/training-servlet.xml</config>
+	</configs>
+	<configSets>
+	</configSets>
+</beansProjectDescription>

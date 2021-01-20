@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+  <bean id="propertyConfigurer" 
+      class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="location"><value>/WEB-INF/hibernate.properties</value></property>
+  </bean>
+
+  <bean id="dataSource"
+      class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="url"><value>${hibernate.connection.url}</value></property>
+    <property name="driverClassName"><value>${hibernate.connection.driver_class}</value></property>
+    <property name="username"><value>${hibernate.connection.username}</value></property>
+    <property name="password"><value>${hibernate.connection.password}</value></property>
+  </bean>
+
+  <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+    <property name="dataSource"><ref bean="dataSource"/></property>
+    <property name="mappingResources">
+      <list>
+        <value>com/springinaction/training/model/Course.hbm.xml</value>
+        <value>com/springinaction/training/model/User.hbm.xml</value>
+      </list>
+    </property>
+    <property name="hibernateProperties">
+      <props>
+        <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+      </props>
+    </property>
+  </bean>
+
+  <bean id="studentDao"
+      class="com.springinaction.training.dao.StudentDaoImpl">
+    <property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  </bean>
+
+  <bean id="courseDao"
+      class="com.springinaction.training.dao.CourseDaoImpl">
+    <property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  </bean>
+
+  <bean id="instructorDao"
+      class="com.springinaction.training.dao.hibernate.InstructorDaoHibernate">
+    <property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  </bean>
+
+</beans>

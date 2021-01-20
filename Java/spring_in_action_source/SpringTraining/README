@@ -1,0 +1,106 @@
+This is the Spring Training application used as a demo for
+"Spring in Action".
+
+To get started, you must edit build.properties, configuring the
+build for your particular environment. This includes specifying
+the location of a Spring installation on your system, database
+specifics, logging paths, and the path where the build should
+a WAR file for deployment.
+
+Once build.properties is configured, you are ready to setup your
+database. We are using Hypersonic for the database, but you may
+swap it out with a database installation of your choosing (such
+as Oracle, MySQL, etc) by changing the database configuration
+properties in build.properties.
+
+If you choose to use Hypersonic, the only database configuration
+you *must* change is hsql.path. Point this to a directory on your
+machine where you want the Hypersonic database to physically reside.
+
+To start Hypersonic, run the "hsql" target of the build:
+
+% ant hsql &
+
+or
+
+> start ant hsql
+
+This target will block once the database is started, so we recommend
+that you run it in the background ('&' in Unix) or in a separate
+window ("start" in Windows). 
+
+With the database running, you next must create the tables for
+the Spring Training application. The "setup_db" target of the
+Ant build will handle this for you:
+
+% ant setup_db
+
+The "setup_db" target starts by using XDoclet to generate the 
+Hibernate mapping files, then uses those mapping files and 
+Hibernate's schemaexport task to generate the tables. It also
+inserts some test data into the database. If you'd prefer to
+only generate the database, but not insert the test data, use
+the "schema" target instead.
+
+The database is started and the tables are created. The last
+thing to do is to deploy the application itself. Run the "deploy"
+target of the Ant build:
+
+% ant deploy
+
+Upon completion, the SpringTraining.war file will have been
+placed in the deployment directory specified by the deploy.target
+build property. Start your application server (or otherwise
+deploy the WAR file) and point your browser to:
+
+http://localhost:8080/SpringTraining
+
+(Note: The actual URL of the application may vary depending on
+your hostname and application server port.)
+
+Several functions of the Spring Training application are
+restricted to logged in users with certain privileges. Creating
+a new course or adding a new instructor, for instance, both
+require that you be logged in with ROLE_INSTRUCTOR privileges.
+
+This creates a chicken and egg problem where you must log in
+as an instructor to create an instructor user to log in as.
+
+Fortunately, part of the "setup_db" target adds a super user
+to the database that can access all areas of the application.
+Login to Spring Training with "admin" as both the username
+and the password and you'll be able to do almost anything
+(including creating an instructor user).
+
+CONCERNING THE SOURCE CODE...
+
+Although we tried to keep the source code for the Spring Training
+application as close to the example code in Spring in Action as
+possible, you may have noticed some minor (and maybe even
+some major) differences.
+
+The fact is, that we wrote the examples in the book's text while
+our focus was on producing a printed book. That means that while
+the examples in the book should be technically correct and should
+highlight the concepts being expressed, they may not reflect the
+best approach to take when actually coding the Spring Training
+application.
+
+Throughout the course of writing the book, we learned more and
+better ways of coding Spring applications. This left us with the
+choice of leaving the Spring Training application alone and letting
+it match the book's code verbatim or to update the application to
+reflect the latest knowledge available. 
+
+It is impossible to change the examples in the book once the book
+has been sent to the printers. However, we have the freedom to
+keep the Spring Training application updated based on current
+knowledge. Therefore, we chose to change and refactor the Spring
+Training application to take into account our new learning. In
+doing so, however, we strove to keep the spirit of the code in
+line with the code examples in the book.
+
+There is no doubt that as time goes on we'll learn and discover
+even better ways to implement the Spring Training application.
+When (not if) that happens, don't be surprised if we make further
+changes to the Spring Training application.

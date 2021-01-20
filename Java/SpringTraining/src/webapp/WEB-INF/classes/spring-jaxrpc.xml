@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+  <bean id="studentService" class="com.springinaction.chapter06.AxisPortProxyFactoryBean">
+    <property name="serviceInterface">
+      <value>com.springinaction.chapter06.StudentService</value>
+    </property>
+    <property name="portInterface">
+      <value>com.springinaction.chapter06.RemoteStudentService</value>
+    </property>
+    <property name="serviceFactoryClass">
+      <value>org.apache.axis.client.ServiceFactory</value>
+    </property>
+    <property name="wsdlDocumentUrl">
+      <value>http://localhost:8080/Remoting/axis/StudentService?wsdl</value>
+    </property>
+    <property name="namespaceUri">a
+      <value>http://localhost:8080/Remoting/axis/StudentService</value>
+    </property>
+    <property name="serviceName">
+      <value>JaxRpcStudentServiceService</value>
+    </property>
+    <property name="portName">
+      <value>StudentService</value>
+    </property>
+    <property name="namespace">
+      <value>urn:SpringTraining</value>
+    </property>
+  </bean>
+
+</beans>

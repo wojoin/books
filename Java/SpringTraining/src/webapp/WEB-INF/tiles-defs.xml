@@ -1,0 +1,46 @@
+<!DOCTYPE tiles-definitions PUBLIC
+    "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+    "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+    
+<tiles-definitions>
+  <definition name="courseDetail" page="/WEB-INF/jsp/mainTemplate.jsp">
+    <put name="title" value="Course Detail" />
+    <put name="body" value="/WEB-INF/jsp/courseDetail.jsp" />
+  </definition>
+  <definition name="courseList" page="/WEB-INF/jsp/mainTemplate.jsp">
+    <put name="title" value="Courses" />
+    <put name="body" value="/WEB-INF/jsp/courseList.jsp" />
+  </definition>
+  <definition name="editCourseForm" page="/WEB-INF/jsp/mainTemplate.jsp">
+    <put name="title" value="Add/Edit Course" />
+    <put name="body" value="/WEB-INF/jsp/editCourseForm.jsp" />
+  </definition>
+  <definition name="editInstructorForm" page="/WEB-INF/jsp/mainTemplate.jsp">
+    <put name="title" value="Add/Edit Instructor" />
+    <put name="body" value="/WEB-INF/jsp/editInstructorForm.jsp" />
+  </definition>
+  <definition name="home" page="/WEB-INF/jsp/mainTemplate.jsp">
+    <put name="title" value="Welcome" />
+    <put name="body" value="/WEB-INF/jsp/home.jsp" />
+  </definition>
+  <definition name="instructorList" page="/WEB-INF/jsp/mainTemplate.jsp">
+    <put name="title" value="Instructors" />
+    <put name="body" value="/WEB-INF/jsp/instructorList.jsp" />
+  </definition>
+  <definition name="registerStudent" page="/WEB-INF/jsp/mainTemplate.jsp">
+    <put name="title" value="Registration" />
+    <put name="body" value="/WEB-INF/jsp/registerStudent.jsp" />
+  </definition>
+  <definition name="registerSuccess" page="/WEB-INF/jsp/mainTemplate.jsp">
+    <put name="title" value="Registration Successful" />
+    <put name="body" value="/WEB-INF/jsp/registrationComplete.jsp" />    
+  </definition>
+  <definition name="instructorDetail" page="/WEB-INF/jsp/mainTemplate.jsp">
+    <put name="title" value="Instructor Info" />
+    <put name="body" value="/WEB-INF/jsp/instructorDetail.jsp" />    
+  </definition>
+  <definition name="transcript" page="/WEB-INF/jsp/mainTemplate.jsp">
+    <put name="title" value="Your Transcript"/>
+    <put name="body" value="/WEB-INF/jsp/transcript.jsp"/>
+  </definition>
+</tiles-definitions>

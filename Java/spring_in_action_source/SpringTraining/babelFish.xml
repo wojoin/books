@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>  
+  <!--  Proxy for the BabelFish service -->
+  <bean id="babelFish"
+      class="org.springframework.remoting.jaxrpc.JaxRpcPortProxyFactoryBean">
+    <property name="serviceInterface">
+      <value>com.habuma.remoting.client.BabelFishLocal</value>
+    </property>
+    <property name="portInterface">
+      <value>com.habuma.remoting.client.BabelFishRemote</value>
+    </property>
+
+    <!-- optional -->
+    <property name="serviceFactoryClass">
+      <value>org.apache.axis.client.ServiceFactory</value>
+    </property>
+    
+    <property name="wsdlDocumentUrl">
+      <value>http://www.xmethods.com/sd/2001/BabelFishService.wsdl</value>
+    </property>
+    <property name="namespaceUri">
+      <value>http://www.xmethods.net/sd/BabelFishService.wsdl</value>
+    </property>
+    <property name="serviceName">
+      <value>BabelFishService</value>
+    </property>
+    <property name="portName">
+      <value>BabelFishPort</value>
+    </property>
+  </bean>
+</beans>

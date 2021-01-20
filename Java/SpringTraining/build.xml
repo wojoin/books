@@ -1,0 +1,245 @@
+<?xml version="1.0"?>
+<!-- ====================================================================== 
+     Spring Training    
+     The Spring Training application from Spring in Action
+                   
+     Craig Walls                                             
+     Ryan Breidenbach              
+     ====================================================================== -->
+<project name="SpringTraining" default="war">
+  
+  <description>
+    The Spring Training application from Spring in Action
+  </description>
+  
+  <property name="target.dir" location="target"/>
+  <property name="src.dir" location="src"/>
+  <property name="java.src.dir" location="${src.dir}/java/main"/>
+  <property name="test.src.dir" location="${src.dir}/java/test"/>
+  <property name="web.src.dir" location="${src.dir}/webapp"/>
+  <property name="webinf.dir" location="${web.src.dir}/WEB-INF"/>
+  <property name="classes.dir" location="${target.dir}/classes"/>
+  <property name="lib.dir" location="lib"/>
+  <property name="war.file" location="${target.dir}/${ant.project.name}.war"/>
+  <property name="webxml.file" location="${webinf.dir}/web.xml"/>
+  <property name="depends.dir" location="${target.dir}/dependencies"/>
+  <property name="xdoclet.lib.dir" location="xdocletlib"/>
+  <property name="hbm.dir" location="${target.dir}/hbm"/>
+  <property name="config.dir" location="config"/>
+  
+  <property file="build.properties"/>
+
+  <path id="ant.lib.path">
+    <fileset dir="${xdoclet.lib.dir}">
+      <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${spring.home}/lib">
+      <include name="hibernate/*.jar"/>
+      <include name="dom4j/*.jar" />
+      <include name="cglib/*.jar" />
+      <include name="j2ee/jta*.jar" />
+    </fileset>
+    <fileset dir="${lib.dir}" includes="hsqldb*.jar,odmg*.jar"/>
+    <path location="${classes.dir}"/> 
+  </path>
+  
+  <fileset id="runtime.fileset" dir="${spring.home}/lib">
+    <include name="aopalliance/aopalliance.jar" />
+    <include name="hibernate/hibernate3.jar" />
+    <include name="antlr/*.jar" />
+    <include name="ehcache/*.jar" />
+    <include name="log4j/*.jar" />
+    <include name="jakarta-commons/commons-logging.jar" />
+    <include name="jakarta-commons/commons-lang.jar" />
+    <include name="jakarta-commons/commons-beanutils.jar" />
+    <include name="jakarta-commons/commons-digester.jar" />
+    <include name="cglib/*.jar" />
+    <include name="dom4j/*.jar" />
+    <include name="j2ee/jta.jar" />
+    <!--
+    <include name="j2ee/jstl.jar" />
+    <include name="jakarta-taglibs/*.jar" />
+    -->
+    <include name="itext/*.jar" />
+    <include name="poi/*.jar" />
+    <include name="oro/*.jar" />
+    <include name="caucho/*.jar" />
+  </fileset>
+
+  <!-- - - - - - - - - - - - - - - - - - 
+        target: copy dependency jars 
+       - - - - - - - - - - - - - - - - - -->
+  <target name="-copyDependencies">
+    <mkdir dir="${depends.dir}"/>
+    <copy toDir="${depends.dir}">
+      <mapper type="flatten"/>
+      <fileset refid="runtime.fileset"/>
+    </copy>
+  </target>
+  
+  <!-- ================================= 
+        target: default              
+       ================================= -->
+  <target name="war" depends="-copyDependencies,compile,generate-hbm,config" 
+      description="--> Build the WAR file">
+    <war destfile="${war.file}" webxml="${webxml.file}">
+      <lib dir="${lib.dir}" includes="*.jar"/>
+      <lib dir="${depends.dir}" includes="*.jar"/>
+      <lib dir="${spring.home}/dist" includes="spring.jar"/>
+      <classes dir="${classes.dir}"/>
+      <classes dir="${hbm.dir}"/>
+      <webinf dir="${webinf.dir}" excludes="web.xml"/>
+      <webinf dir="${target.dir}/webapp/WEB-INF"/>
+      <fileset dir="${web.src.dir}" includes="index.html,jsp/**"/>
+    </war>
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - - 
+        target: generate hbm files
+       - - - - - - - - - - - - - - - - - -->
+  <target name="config">
+    <filter token="db.url" value="${db.url}"/>
+    <filter token="db.driver" value="${db.driver}"/>
+    <filter token="db.username" value="${db.username}"/>
+    <filter token="db.password" value="${db.password}"/>
+    <filter token="hibernate.dialect" value="${hibernate.dialect}"/>
+    <filter token="logfile.path" value="${logfile.path}"/>
+
+    <mkdir dir="${target.dir}/webapp/WEB-INF/classes"/> 
+
+    <copy todir="${target.dir}/webapp/WEB-INF" 
+        file="${config.dir}/hibernate.properties"
+        filtering="true"
+        overwrite="true"/>
+    
+    <copy todir="${target.dir}/webapp/WEB-INF/classes"
+        file="${config.dir}/log4j.properties"
+        filtering="true"
+        overwrite="true"/>
+  </target> 
+
+  <!-- - - - - - - - - - - - - - - - - - 
+        target: generate hbm files
+       - - - - - - - - - - - - - - - - - -->
+  <target name="generate-hbm" depends="compile">
+    <mkdir dir="${hbm.dir}"/>
+    
+    <taskdef name="hibernatedoclet" 
+        classname="xdoclet.modules.hibernate.HibernateDocletTask"
+        classpathref="ant.lib.path" />
+
+    <hibernatedoclet destdir="${hbm.dir}">
+      <fileset dir="${java.src.dir}">
+        <include name="**/*.java" />
+      </fileset>
+
+      <hibernate version="3.0"/> 
+    </hibernatedoclet>
+  </target>
+
+  <!-- - - - - - - - - - - - - - - - - - 
+        target: generate database schema
+       - - - - - - - - - - - - - - - - - -->
+  <target name="schema" depends="generate-hbm,config">
+   
+    <taskdef name="schemaexport"
+        classname="org.hibernate.tool.hbm2ddl.SchemaExportTask"
+        classpathref="ant.lib.path"/>
+
+    <schemaexport properties="${target.dir}/webapp/WEB-INF/hibernate.properties" 
+        quiet="yes" 
+        text="no" 
+        drop="no" 
+        delimiter=";" 
+        output="target/schema.sql"> 
+
+      <fileset dir="${hbm.dir}"> 
+        <include name="**/*.hbm.xml"/> 
+      </fileset> 
+    </schemaexport>  
+  </target>
+    
+  <!-- - - - - - - - - - - - - - - - - - 
+        target: setup database
+       - - - - - - - - - - - - - - - - - -->
+  <target name="setup_db" depends="schema">  
+    <sql driver="${db.driver}"
+         url="${db.url}"
+         userid="${db.username}"
+         password="${db.password}"
+         src="setup.sql"
+         print="yes">
+      <classpath>
+        <pathelement location="lib/hsqldb.jar"/>
+      </classpath>
+    </sql>
+  </target> 
+  
+  
+  <!-- - - - - - - - - - - - - - - - - - 
+        target: start Hypersonic                      
+       - - - - - - - - - - - - - - - - - -->
+  <target name="hsql">
+    <echo message="Starting HSQLDB"/>
+    <java fork="true" dir="." classname="org.hsqldb.Server">
+      <classpath>
+        <pathelement path="${lib.dir}/hsqldb.jar"/>
+      </classpath>
+      <arg value="-database.0"/>
+      <arg value="${hsql.path}"/>
+      <arg value="-dbname.0"/>
+      <arg value="${hsql.name}"/>
+    </java>
+  </target>
+  
+  <!-- - - - - - - - - - - - - - - - - - 
+        target: compile                      
+       - - - - - - - - - - - - - - - - - -->
+  <target name="compile">
+    <mkdir dir="${classes.dir}"/>
+    <javac srcdir="${java.src.dir}" destdir="${classes.dir}">
+      <classpath>
+        <pathelement path="${classpath}"/>
+        <fileset dir="${lib.dir}">
+          <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="${spring.home}/lib">
+          <include name="**/*.jar"/>
+        </fileset>
+        <pathelement location="${spring.home}/dist/spring.jar"/>
+      </classpath>
+    </javac>
+  </target>
+    
+  <!-- - - - - - - - - - - - - - - - - - 
+          target: deploy web application
+         - - - - - - - - - - - - - - - - - -->
+  <target name="deploy" depends="war">
+    <copy file="${war.file}" todir="${deploy.target}"/>
+  </target>
+  
+  <!-- - - - - - - - - - - - - - - - - - 
+        target: clean                      
+       - - - - - - - - - - - - - - - - - -->
+  <target name="clean">
+    <delete dir="${target.dir}"/>
+  </target>
+  
+  
+  <target name="zipItUp" depends="clean">
+    <delete file="${target.dir}/${ant.project.name}.zip"/>
+    <mkdir dir="${target.dir}"/>    
+
+    <zip destfile="${target.dir}/${ant.project.name}.zip">
+      <zipfileset dir="." prefix="${ant.project.name}">
+        <include name="**"/>
+        <exclude name=".*"/>
+        <exclude name="bin/**"/>
+        <exclude name="target/**"/>
+        <exclude name="todo.txt"/>
+        <exclude name="src/webapp/WEB-INF/freemarker/**"/>
+        <exclude name="src/webapp/WEB-INF/velocity/**"/>
+      </zipfileset>
+    </zip>
+  </target>
+</project>

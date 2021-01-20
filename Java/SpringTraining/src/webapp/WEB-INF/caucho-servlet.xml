@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+    <bean name="/HessianStudentService"
+          class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service"><ref bean="studentService"/></property>
+        <property name="serviceInterface">
+            <value>com.springinaction.chapter06.StudentService</value>
+        </property>
+    </bean>
+
+    <bean name="/BurlapStudentService"
+          class="org.springframework.remoting.caucho.BurlapServiceExporter">
+        <property name="service"><ref bean="studentService"/></property>
+        <property name="serviceInterface">
+            <value>com.springinaction.chapter06.StudentService</value>
+        </property>
+    </bean>
+    
+    <bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+
+</beans>

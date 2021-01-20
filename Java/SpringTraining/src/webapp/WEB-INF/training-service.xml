@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="transactionManager" 
+	    class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+	  <property name="sessionFactory">                                  
+	    <ref bean="sessionFactory"/>
+	  </property>
+	</bean>
+
+  <bean id="courseServiceTarget"
+      class="com.springinaction.training.service.CourseServiceImpl">
+    <constructor-arg><ref bean="courseDao"/></constructor-arg>
+    <property name="studentService"><ref bean="studentService"/></property>
+  </bean>
+
+  <bean id="studentService" 
+      class="com.springinaction.training.service.StudentServiceImpl">
+    <constructor-arg><ref bean="studentDao"/></constructor-arg>
+  </bean>
+
+  <!-- TRANSACTION SUPPORT -->
+
+  <bean id="courseService"
+	    class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	  <property name="target"><ref bean="courseServiceTarget"/></property>
+    <property name="transactionManager">
+      <ref bean="transactionManager"/>
+    </property>
+    
+    <property name="transactionAttributes">
+      <props>
+        <prop key="enrollStudentInCourse">
+          PROPAGATION_REQUIRED,ISOLATION_DEFAULT
+        </prop>
+      </props>
+    </property>
+  </bean>  
+
+  <bean id="instructorService"
+      class="com.springinaction.training.service.InstructorServiceImpl">
+    <property name="instructorDao"><ref bean="instructorDao"/></property>
+  </bean>
+
+<!--
+  <bean id="studentService"
+	    class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+	  <property name="target"><ref bean="studentServiceTarget"/></property>
+    <property name="transactionManager">
+      <ref bean="transactionManager"/>
+    </property>
+    
+    <property name="transactionAttributes">
+      <props>
+        <prop key="*">
+          PROPAGATION_REQUIRED,ISOLATION_DEFAULT
+        </prop>
+      </props>
+    </property>
+  </bean>  
+-->
+
+  <bean id="paymentService"
+      class="com.springinaction.payment.PaymentServiceImpl"/>
+
+  <!-- =============== RMI =============== -->
+  <bean class="org.springframework.remoting.rmi.RmiServiceExporter"> 
+    <property name="serviceName">
+      <value>PaymentService</value>
+    </property> 
+    <property name="service">
+      <ref bean="paymentService"/>
+    </property> 
+    <property name="serviceInterface">
+      <value>com.springinaction.payment.PaymentService</value>
+    </property> 
+  </bean>
+  
+  <!-- =============== HESSIAN =============== -->
+  <bean class="org.springframework.remoting.caucho.HessianServiceExporter"> 
+    <property name="service">
+      <ref bean="paymentService"/>
+    </property> 
+    <property name="serviceInterface">
+      <value>com.springinaction.payment.PaymentService</value>
+    </property> 
+  </bean>
+  
+  <!-- =============== BURLAP =============== -->
+  <bean class="org.springframework.remoting.caucho.BurlapServiceExporter"> 
+    <property name="service">
+      <ref bean="paymentService"/>
+    </property> 
+    <property name="serviceInterface">
+      <value>com.springinaction.payment.PaymentService</value>
+    </property> 
+  </bean>
+  
+  <!-- =============== HTTPINVOKER =============== -->
+  <bean class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"> 
+    <property name="service">
+      <ref bean="paymentService"/>
+    </property> 
+    <property name="serviceInterface">
+      <value>com.springinaction.payment.PaymentService</value>
+    </property> 
+  </bean>
+  
+</beans>
