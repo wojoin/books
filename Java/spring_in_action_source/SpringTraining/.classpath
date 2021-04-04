@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="src/java/main"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/spring-framework-1.1"/>
-	<classpathentry kind="lib" path="lib/tapestry-3.0.jar"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>
