@@ -7,3 +7,5 @@
 ### 2021 Reading List
 1. 自制编译器 How to develop a Compiler
    - 从源码到编译、汇编、链接、运行等各个环节讲解了程序背后的事情, 重点放在了编译部分。
+   - [概要总结](./Compiler/How%20to%20develop%20a%20compiler-outline.png)
+   - [详细脑图](./Compiler/How%20to%20develop%20a%20compiler.png)
