@@ -9,3 +9,5 @@
    - 从源码到编译、汇编、链接、运行等各个环节讲解了程序背后的事情, 重点放在了编译部分。
    - [概要总结](./Compiler/How%20to%20develop%20a%20compiler-outline.png)
    - [详细脑图](./Compiler/How%20to%20develop%20a%20compiler.png)
+2. [flex & bison](https://learning.oreilly.com/library/view/flex-bison/9780596805418/)
+   - 与lex和yacc类似, 值得一看的底层编译技术，语法解析到AST,并提供了一共SQL解析器的实现(一个小型的解析器是正则表达式的实现)
