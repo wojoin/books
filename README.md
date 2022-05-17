@@ -21,9 +21,9 @@
    - 传统数据库的ACID的具体解读
    - 分布式中遇到的问题, 如时钟问题、主副本之间的通信问题、主副本之间的事务性问题
 2. Programing Kubernetes 可编程的Kubernetes
-   以Kubernetes中的一个实际需求触发，逐渐引出本书的主题: 自定义资源。在Kubernetes中通过CRD来完成，由此引出Kubernetes Operator和Operator SDK。最后本书也给出了实现一个Kubernetes-native resource的完整示例。由此也能加深对Kubernetes内部原理的理解, 特别是Admission Control、 Informer and List、Controller模式以及 API Server等原理的理解
+   - 以Kubernetes中的一个实际需求触发，逐渐引出本书的主题: 自定义资源。在Kubernetes中通过CRD来完成，由此引出Kubernetes Operator和Operator SDK。最后本书也给出了实现一个Kubernetes-native resource的完整示例。由此也能加深对Kubernetes内部原理的理解, 特别是Admission Control、 Informer and List、Controller模式以及 API Server等原理的理解
 3. 计算之魂 吴军
-   从计算机的二进制本源出发, 逐步拆解, 递归思想, 万物可编码, 分类组合, 分治思想(按数量分治-归并算法和按值分治-中值),分割算法, 大数据的MapReduce算法思想, 特别是后面半部分内容, 打开了对大数据的处理, 做题时会对那些海量数据处理的算法不在陌生, 增强了做算法题的信心。
+   - 从计算机的二进制本源出发, 逐步拆解, 递归思想, 万物可编码, 分类组合, 分治思想(按数量分治-归并算法和按值分治-中值),分割算法, 大数据的MapReduce算法思想, 特别是后面半部分内容, 打开了对大数据的处理, 做题时会对那些海量数据处理的算法不在陌生, 增强了做算法题的信心。
 4. Design Patterns: Elements of Reusable Object-Oriented Software, GoF 设计模式
    - O‘Reilly上的读物, 从英文角度阅读了Design Pattern
 5. The Art Of Computer Programming Volumn 1-6
