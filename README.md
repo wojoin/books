@@ -28,3 +28,24 @@
    - O‘Reilly上的读物, 从英文角度阅读了Design Pattern
 5. The Art Of Computer Programming Volumn 1-6
    - 对于用到的算法, 随手翻译经典
+6. C++ Templates The Complete Guide 2nd edition
+   - 学习 C++ 11/14/17中的 Templates 相关技术, 这是 meta-programming的重难点, 涉及到的东西很多, 也很有用的技术, 如
+      - class template
+      - variadic template
+      - parameter pack
+      - variant and option
+      - tuple
+      - type traits
+      - ...
+   之后阅读项目代码就轻松了很多, 脑子里会过一遍代码执行过程是怎样的, 心里也有底气了很多
+7. Go相关
+   - Go 语言学习笔记 - 雨痕
+   - [Go 语言设计与实现](https://draveness.me/golang/) Draveness
+   - Go 圣经
+   - Go In Action
+   - Go 语言底层原理剖析
+   - Go 专家编程
+
+### 2023 Reading List
+TODO
+
